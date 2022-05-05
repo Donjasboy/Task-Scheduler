@@ -1,0 +1,11 @@
+{
+  "name": "debaco",
+  "version": "1.0.0",
+  "description": "setting up a task scheduler",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Debaco",
+  "license": "ISC"
+}
