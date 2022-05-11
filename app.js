@@ -17,16 +17,10 @@ const taskSchema = new mongoose.Schema({
   userId:String,
   title:{
     type: String,
-    required: true
+    required: [true, "a task must have a title"]
   },
-  description:{
-    type: String,
-    required: true
-  },
-  username: {
-    type: String,
-    required: true
-  },
+  description:String,
+  username: String,
   created_Date:Date,
   start_Date:Date,
   end_Date:Date,
