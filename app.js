@@ -25,8 +25,6 @@ const taskSchema = new mongoose.Schema({
   username: String,
   created_Date:Date,
   start_Date:Date,
-  //end_Date:Date,
-
   end_Date: {
     type: Date,
     validate: {
@@ -44,13 +42,6 @@ const taskSchema = new mongoose.Schema({
   status:  String
 });
 
-
-
-//now pass in the dateStampSchema object as the type for a schema field
-// var schema = new Schema({
-//   dateInfo: {type:dateStampSchema, validate:checkDates}
-// });
-
 const Task = mongoose.model('Task', taskSchema);
 app.post("/tasks", function(req, res){
   // Creating a Date object
@@ -65,7 +56,7 @@ app.post("/tasks", function(req, res){
     end_Date: req.body.end_Date,
     status: req.body.status
   });
-
+  
   newTask.save(function(err){
     if (!err){
       res.status(201).json({
@@ -80,7 +71,32 @@ app.post("/tasks", function(req, res){
     }
   });
 })
+app.put("/tasks/:id", function(req, res){
+ 
+  Task.findByIdAndUpdate(req.params.id,
+    {
+      title: req.body.title,
+      description: req.body.description,
+      username: req.body.username,
+      
+      start_Date: req.body.start_Date,
+      end_Date: req.body.end_Date,
+      status: req.body.status
+    },
 
+ function(err, results){
+   if(!err){
+  
+   res.status(201).json({
+    message: "Successfully updated ",
+    data: results
+  });
+ }else{
+   res.send("no match found in the DB cant update: "+err.message);
+ }
+ });
+
+})
 
 let port = process.env.PORT;
 if (port == null || port == "") {
