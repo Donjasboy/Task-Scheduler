@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 
 const mongoose = require('mongoose');
 
+
+
 // Connection URL
 
 mongoose.connect("mongodb://localhost:27017/schedulerDB",{ useNewUrlParser: true });
@@ -23,9 +25,31 @@ const taskSchema = new mongoose.Schema({
   username: String,
   created_Date:Date,
   start_Date:Date,
-  end_Date:Date,
+  //end_Date:Date,
+
+  end_Date: {
+    type: Date,
+    validate: {
+      // comparing the fields
+      validator: function checkDates(value) {
+        return value > this.start_Date; 
+      },
+      message: "is not a valid date!"
+    }
+  },
+
+
+
+
   status:  String
 });
+
+
+
+//now pass in the dateStampSchema object as the type for a schema field
+// var schema = new Schema({
+//   dateInfo: {type:dateStampSchema, validate:checkDates}
+// });
 
 const Task = mongoose.model('Task', taskSchema);
 app.post("/tasks", function(req, res){
