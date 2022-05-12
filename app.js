@@ -98,6 +98,24 @@ app.put("/tasks/:id", function(req, res){
 
 })
 
+app.get("/tasks/:id", function(req, res){
+  // get a specific object using the title
+      Task.findOne({_id:req.params.id}, function(err, foundId){
+        if(foundId){
+          res.status(201).json({
+            message: "Successful ",
+            data: foundId
+          });
+      }else{
+        res.send("no match found in the DB");
+      }
+      });
+  
+    })
+
+
+
+
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
