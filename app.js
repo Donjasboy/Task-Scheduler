@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 
 const mongoose = require('mongoose');
 
+
+
 // Connection URL
 
 mongoose.connect("mongodb://localhost:27017/schedulerDB",{ useNewUrlParser: true });
@@ -23,7 +25,20 @@ const taskSchema = new mongoose.Schema({
   username: String,
   created_Date:Date,
   start_Date:Date,
-  end_Date:Date,
+  end_Date: {
+    type: Date,
+    validate: {
+      // comparing the fields
+      validator: function checkDates(value) {
+        return value > this.start_Date; 
+      },
+      message: "is not a valid date!"
+    }
+  },
+
+
+
+
   status:  String
 });
 
@@ -41,7 +56,7 @@ app.post("/tasks", function(req, res){
     end_Date: req.body.end_Date,
     status: req.body.status
   });
-
+  
   newTask.save(function(err){
     if (!err){
       res.status(201).json({
@@ -56,7 +71,32 @@ app.post("/tasks", function(req, res){
     }
   });
 })
+app.put("/tasks/:id", function(req, res){
+ 
+  Task.findByIdAndUpdate(req.params.id,
+    {
+      title: req.body.title,
+      description: req.body.description,
+      username: req.body.username,
+      
+      start_Date: req.body.start_Date,
+      end_Date: req.body.end_Date,
+      status: req.body.status
+    },
 
+ function(err, results){
+   if(!err){
+  
+   res.status(201).json({
+    message: "Successfully updated ",
+    data: results
+  });
+ }else{
+   res.send("no match found in the DB cant update: "+err.message);
+ }
+ });
+
+})
 
 let port = process.env.PORT;
 if (port == null || port == "") {
