@@ -113,6 +113,19 @@ app.get("/tasks/:id", function(req, res){
   
     })
 
+    app.get("/tasks", function(req, res){
+      Task.find({}, function(err, foundTasks){
+        if(foundTasks){
+          res.status(200).json({
+            message: "Successful ",
+            data: foundTasks
+          });
+      }else{
+        res.send("no match found in the DB");
+      }
+      });
+      });
+
 
 
 
