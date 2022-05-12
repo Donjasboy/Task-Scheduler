@@ -87,7 +87,7 @@ app.put("/tasks/:id", function(req, res){
  function(err, results){
    if(!err){
   
-   res.status(201).json({
+   res.status(200).json({
     message: "Successfully updated ",
     data: results
   });
@@ -97,6 +97,24 @@ app.put("/tasks/:id", function(req, res){
  });
 
 })
+
+app.get("/tasks/:id", function(req, res){
+  // get a specific object using the id
+      Task.findOne({_id:req.params.id}, function(err, task){
+        if(task){
+          res.status(200).json({
+            message: "Successful ",
+            data: task
+          });
+      }else{
+        res.send("no match found in the DB");
+      }
+      });
+  
+    })
+
+
+
 
 let port = process.env.PORT;
 if (port == null || port == "") {
