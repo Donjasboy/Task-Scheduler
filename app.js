@@ -4,10 +4,13 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 // Connection URL
+// Connection URL
 
-mongoose.connect("mongodb://localhost:27017/schedulerDB", {
-  useNewUrlParser: true,
-});
+mongoose.connect("mongodb+srv://admin-donjasboy:Test123@cluster0.f4lfn.mongodb.net/schedulerDB",{ useNewUrlParser: true });
+
+// mongoose.connect("mongodb://localhost:27017/schedulerDB", {
+//   useNewUrlParser: true,
+// });
 
 const app = express();
 // important bodyParser setting
