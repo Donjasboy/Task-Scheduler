@@ -1,7 +1,9 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const app = express();
 const mongoose = require("mongoose");
+const Task = require("./models/Task");
+const taskRouter = require("./routes/taskRoutes")
 
 // Connection URL
 // Connection URL
@@ -12,118 +14,82 @@ mongoose.connect("mongodb+srv://admin-donjasboy:Test123@cluster0.f4lfn.mongodb.n
 //   useNewUrlParser: true,
 // });
 
-const app = express();
+// middlewares
+
+// app.use((req,res,next)=>{
+//   req.isAuth =  false;
+//   next()
+// })
+
+// app.use((req,res,next)=>{
+//   if(req.isAuth == false){
+//     res.status(400).send("Error message");
+//   }
+//   next()
+// })
+
 // important bodyParser setting
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const taskSchema = new mongoose.Schema({
-  userId: String,
-  title: {
-    type: String,
-    required: [true, "a task must have a title"],
-  },
-  description: String,
-  username: String,
-  created_Date: Date,
-  start_Date: Date,
-  end_Date: {
-    type: Date,
-    validate: {
-      // comparing the fields
-      validator: function checkDates(value) {
-        return value > this.start_Date;
-      },
-      message: "is not a valid date!",
-    },
-  },
+// app.post("/tasks", function (req, res) {
+//   // Creating a Date object
+//   const dateObj = new Date();
+//   const currentTime = dateObj.toDateString() + "-" + dateObj.toTimeString();
+//   const newTask = new Task({
+//     title: req.body.title,
+//     description: req.body.description,
+//     username: req.body.username,
+//     created_Date: currentTime,
+//     start_Date: req.body.start_Date,
+//     end_Date: req.body.end_Date,
+//     status: req.body.status,
+//   });
 
-  status: String,
-});
+//   newTask.save(function (err) {
+//     if (!err) {
+//       res.status(201).json({
+//         message: "created a new task successful",
+//         data: newTask,
+//       });
+//     } else {
+//       res.status(400).json({
+//         message: "unable to save",
+//       });
+//     }
+//   });
+// });
+// app.put("/tasks/:id", function (req, res) {
+//   Task.findByIdAndUpdate(
+//     req.params.id,
+//     {
+//       title: req.body.title,
+//       description: req.body.description,
+//       username: req.body.username,
 
-const Task = mongoose.model("Task", taskSchema);
-app.post("/tasks", function (req, res) {
-  // Creating a Date object
-  const dateObj = new Date();
-  const currentTime = dateObj.toDateString() + "-" + dateObj.toTimeString();
-  const newTask = new Task({
-    title: req.body.title,
-    description: req.body.description,
-    username: req.body.username,
-    created_Date: currentTime,
-    start_Date: req.body.start_Date,
-    end_Date: req.body.end_Date,
-    status: req.body.status,
-  });
+//       start_Date: req.body.start_Date,
+//       end_Date: req.body.end_Date,
+//       status: req.body.status,
+//     },
 
-  newTask.save(function (err) {
-    if (!err) {
-      res.status(201).json({
-        message: "created a new task successful",
-        data: newTask,
-      });
-    } else {
-      res.status(400).json({
-        message: "unable to save",
-      });
-    }
-  });
-});
-app.put("/tasks/:id", function (req, res) {
-  Task.findByIdAndUpdate(
-    req.params.id,
-    {
-      title: req.body.title,
-      description: req.body.description,
-      username: req.body.username,
+//     function (err, results) {
+//       if (!err) {
+//         res.status(200).json({
+//           message: "Successfully updated ",
+//           data: results,
+//         });
+//       } else {
+//         res.send("no match found in the DB cant update: " + err.message);
+//       }
+//     }
+//   );
+// });
 
-      start_Date: req.body.start_Date,
-      end_Date: req.body.end_Date,
-      status: req.body.status,
-    },
-
-    function (err, results) {
-      if (!err) {
-        res.status(200).json({
-          message: "Successfully updated ",
-          data: results,
-        });
-      } else {
-        res.send("no match found in the DB cant update: " + err.message);
-      }
-    }
-  );
-});
-
-app.get("/tasks/:id", function (req, res) {
-  // get a specific object using the id
-  Task.findOne({ _id: req.params.id }, function (err, task) {
-    if (task) {
-      res.status(200).json({
-        message: "Successful ",
-        data: task,
-      });
-    } else {
-      res.send("no match found in the DB");
-    }
-  });
-});
-
-app.get("/tasks", function (req, res) {
-  Task.find({}, function (err, foundTasks) {
-    if (foundTasks) {
-      res.status(200).json({
-        message: "Successful ",
-        data: foundTasks,
-      });
-    } else {
-      res.send("no match found in the DB");
-    }
-  });
-});
+app.use("/tasks", taskRouter);
 
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
-  console.log("Server has started.");
 }
-app.listen(port);
+app.listen(port, ()=>{
+  console.log(`Server has started on port ${port}`);
+});
