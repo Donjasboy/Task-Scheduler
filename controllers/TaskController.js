@@ -54,7 +54,7 @@ exports.updateTask = function (req, res) {
     );
   }
 
-  exports.createsTask = function (req, res) {
+  exports.createTask = function (req, res) {
     // Creating a Date object
     const dateObj = new Date();
     const currentTime = dateObj.toDateString() + "-" + dateObj.toTimeString();
