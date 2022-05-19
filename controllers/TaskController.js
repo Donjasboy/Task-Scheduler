@@ -5,28 +5,23 @@ exports.getTasks = async (req, res) => {
 
   res.status(200).json({
     message: "Successful ",
-    data: tasks,
+    data: tasks
   });
 }
 
-exports.getTask = function (req, res) {
+exports.getTask = async (req, res) => {
   // get a specific object using the id
-  Task.findOne({ _id: req.params.id }, function (err, task) {
-    if (task) {
+  let findTask = await Task.findOne({ _id: req.params.id });
       res.status(200).json({
         message: "Successful ",
-        data: task,
+        data: findTask
       });
-    } else {
-      res.send("no match found in the DB");
-    }
-  });
 
 }
 
 
-exports.updateTask = function (req, res) {
-  Task.findByIdAndUpdate(
+exports.updateTask = async (req, res) => {
+  let updateTask = await Task.findByIdAndUpdate(
     req.params.id,
     {
       title: req.body.title,
@@ -36,22 +31,15 @@ exports.updateTask = function (req, res) {
       end_Date: req.body.end_Date,
       status: req.body.status,
     },
-    { new: true },
-
-    function (err, results) {
-      if (!err) {
-        res.status(200).json({
-          message: "Successfully updated ",
-          data: results,
-        });
-      } else {
-        res.send("no match found in the DB cant update: " + err.message);
-      }
-    }
-  );
+    { new: true }
+    )
+    res.status(200).json({
+      message: "Successfully updated ",
+      data: updateTask,
+    })
 }
 
-exports.createTask = function (req, res) {
+exports.createTask  = async (req, res) =>{
   // Creating a Date object
   const dateObj = new Date();
   const currentTime = dateObj.toDateString() + "-" + dateObj.toTimeString();
@@ -64,17 +52,10 @@ exports.createTask = function (req, res) {
     end_Date: req.body.end_Date,
     status: req.body.status,
   });
-
-  newTask.save(function (err) {
-    if (!err) {
+ 
+  let saveNewTask = await newTask.save()
       res.status(201).json({
         message: "created a new task successful",
-        data: newTask,
+        data: saveNewTask,
       });
-    } else {
-      res.status(400).json({
-        message: "unable to save",
-      });
-    }
-  });
 }
