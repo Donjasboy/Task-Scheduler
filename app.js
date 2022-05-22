@@ -2,8 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const mongoose = require("mongoose");
-const Task = require("./models/Task");
+// const Task = require("./models/Task");
+// const User = require("./models/User");
 const taskRouter = require("./routes/taskRoutes")
+const userRouter = require("./routes/userRoutes")
 
 // Connection URL
 // Connection URL
@@ -32,6 +34,7 @@ mongoose.connect("mongodb+srv://admin-donjasboy:Test123@cluster0.f4lfn.mongodb.n
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/tasks", taskRouter);
+app.use("/users", userRouter);
 
 let port = process.env.PORT;
 if (port == null || port == "") {
