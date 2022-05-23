@@ -1,3 +1,5 @@
+
+require ('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -10,7 +12,7 @@ const userRouter = require("./routes/userRoutes")
 // Connection URL
 // Connection URL
 
-mongoose.connect("mongodb+srv://admin-donjasboy:Test123@cluster0.f4lfn.mongodb.net/schedulerDB",{ useNewUrlParser: true });
+mongoose.connect(process.env.DATABASE,{ useNewUrlParser: true });
 
 // mongoose.connect("mongodb://localhost:27017/schedulerDB", {
 //   useNewUrlParser: true,
