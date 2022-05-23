@@ -1,7 +1,7 @@
 const User = require("./../models/User");
 const { hashSync } = require("bcrypt");
 
-exports.createUser = function (req, res){
+exports.createUser = async (req, res) => {
   const newUser = new User({
     userName: req.body.userName,
     password: hashSync(req.body.password, 10),
@@ -9,23 +9,17 @@ exports.createUser = function (req, res){
     lastName: req.body.lastName,
     gender: req.body.gender,
   });
-  User.findOne({userName: req.body.userName},function(err,user){
-    if(err) console.log(err)
- 
-  if ( user ) {
-    res.status(400).json({message:'Username already exists'})
-    
-    
-}
-    else{ 
-       let saveNewUser = newUser.save();
-      let {userName, firstName, lastName, gender} = saveNewUser
-      res.status(201).json({
-       message: "created a new user successful",
-       data: {userName, firstName, lastName, gender},
-     });
-    }
-});
+  let findExistingUser = await User.findOne({ userName: req.body.userName });
+
+  if (!findExistingUser) {
+    let saveNewUser = await newUser.save();
+    res.status(201).json({
+      message: "Successfully added new user",
+      data: saveNewUser,
+    });
+  } else {
+    res.status(400).json({ message: "Username already exists" });
+  }
 };
 
 exports.getUser = async (req, res) => {
