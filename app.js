@@ -12,7 +12,8 @@ const userRouter = require("./routes/userRoutes")
 // Connection URL
 // Connection URL
 
-mongoose.connect(process.env.DATABASE,{ useNewUrlParser: true });
+mongoose.connect("mongodb+srv://"+process.env.DB_USERNAME+":"+process.env.DB_PWD+"@cluster0.f4lfn.mongodb.net/"+process.env.DB_NAME,{ useNewUrlParser: true });
+//"mongodb+srv://admin-donjasboy:Test123@cluster0.f4lfn.mongodb.net/schedulerDB"
 
 // mongoose.connect("mongodb://localhost:27017/schedulerDB", {
 //   useNewUrlParser: true,
