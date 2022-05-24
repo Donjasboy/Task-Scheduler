@@ -1,26 +1,9 @@
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const User = require("./../models/User");
-const { hashSync } = require("bcrypt");
+//const { hash } = require("bcrypt");
 
-exports.createUser = async (req, res) => {
-  const newUser = new User({
-    userName: req.body.userName,
-    password: hashSync(req.body.password, 10),
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    gender: req.body.gender,
-  });
-  let findExistingUser = await User.findOne({ userName: req.body.userName });
 
-  if (!findExistingUser) {
-    let saveNewUser = await newUser.save();
-    res.status(201).json({
-      message: "Successfully added new user",
-      data: saveNewUser,
-    });
-  } else {
-    res.status(400).json({ message: "Username already exists" });
-  }
-};
 
 exports.getUser = async (req, res) => {
   // get a specific object using the id
@@ -30,6 +13,40 @@ exports.getUser = async (req, res) => {
     data: findUser,
   });
 };
+
+// exports.login = async (req, res) => {
+  
+//   const { userName, password } = req.body;
+
+//   if (!(userName && password)) {
+//     res.status(400).send("All input is required");
+//   }
+
+//   const user = await User.findOne({ userName });
+
+//   if (user && (await compare(password, user.password))) {
+//     // Create token
+//     const token = jwt.sign(
+//       { user_id: user._id, userName },
+//       process.env.TOKEN_KEY,
+//       {
+//         expiresIn: "2h",
+//       }
+//     );
+
+//     // save user token
+//     user.token = token;
+
+//     // user
+//     res.status(200).json({
+//       message: "Successful ",
+//       data: user,
+//     });
+//   }
+ 
+
+  
+// };
 
 exports.updateUser = async (req, res) => {
   let updateUser = await User.findByIdAndUpdate(
