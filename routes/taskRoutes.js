@@ -1,14 +1,14 @@
 const express = require("express");
 const taskController = require("./../controllers/TaskController");
-
+const AuthController = require("./../controllers/AuthController");
 const router = express.Router();
 router.route("/")
-    .get(taskController.getTasks)
-    .post(taskController.createTask)
+    .get(AuthController.protect, taskController.getTasks)
+    .post(AuthController.protect, taskController.createTask)
 
 
 router.route("/:id")
-    .get(taskController.getTask)
-    .put(taskController.updateTask)
+    .get(AuthController.protect, taskController.getTask)
+    .put(AuthController.protect, taskController.updateTask)
 
 module.exports = router;

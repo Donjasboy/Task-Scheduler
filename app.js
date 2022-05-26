@@ -1,26 +1,18 @@
-
-require ('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
+const taskRouter = require("./routes/taskRoutes");
+const userRouter = require("./routes/userRoutes");
+const authRouter = require("./routes/authRoutes");
+
+require("dotenv").config();
 const app = express();
 require("./config/database").connect();
-//const http = require("http");
-//const server = http.createServer(app);
-
-//const mongoose = require("mongoose");
-// const Task = require("./models/Task");
-// const User = require("./models/User");
-const taskRouter = require("./routes/taskRoutes")
-const userRouter = require("./routes/userRoutes")
-const authRouter = require("./routes/authRoutes")
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/tasks", taskRouter);
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
-
-
 
 // Connection URL
 // Connection URL
@@ -48,12 +40,10 @@ app.use("/auth", authRouter);
 
 // important bodyParser setting
 
-
-
 let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
 }
-app.listen(port, ()=>{
+app.listen(port, () => {
   console.log(`Server has started on port ${port}`);
 });
